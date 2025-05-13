@@ -1,0 +1,439 @@
+{
+  "intents": [
+    {
+      "intent": "cadastro",
+      "examples": [
+        {
+          "text": "Como faço o meu cadastro no seu sistema?"
+        },
+        {
+          "text": "Eu não tenho cadastro. Gostaria de me cadastrar?"
+        },
+        {
+          "text": "Gostaria de fazer o meu cadastro?"
+        },
+        {
+          "text": "Onde eu faço o meu cadastro?"
+        },
+        {
+          "text": "Você saberia me dizer, se tenho algum cadastro?"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "entrega_produto",
+      "examples": [
+        {
+          "text": "Como você avalia a facilidade de acompanhar o status da sua entrega?"
+        },
+        {
+          "text": "Onde vocês entregam os produtos?"
+        },
+        {
+          "text": "Quais foram suas expectativas em relação ao prazo de entrega e em que medida elas foram atendidas?"
+        },
+        {
+          "text": "Quais regiões vocês entregam?"
+        },
+        {
+          "text": "Qual o prazo de entrega do meu produto?"
+        }
+      ],
+      "description": ""
+    }
+  ],
+  "entities": [
+    {
+      "entity": "cadastro",
+      "values": [
+        {
+          "type": "patterns",
+          "value": "Nome Completo",
+          "patterns": [
+            "[^[\\p{L}\\s]+ [\\p{L}\\s]+$]"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "estados",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "Acre",
+          "synonyms": [
+            "ac"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Rio de Janeiro",
+          "synonyms": [
+            "rj"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "São Paulo",
+          "synonyms": [
+            "sampa",
+            "sp"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "opcao",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "não",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "sim",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "pesssoas_cadastradas",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "João",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "sys-date",
+      "values": []
+    },
+    {
+      "entity": "sys-time",
+      "values": []
+    }
+  ],
+  "metadata": {
+    "api_version": {
+      "major_version": "v2",
+      "minor_version": "2018-11-08"
+    }
+  },
+  "dialog_nodes": [
+    {
+      "type": "standard",
+      "title": "Bem-vindo",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Olá. Como posso te ajudar?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "welcome",
+      "dialog_node": "Bem-vindo"
+    },
+    {
+      "type": "standard",
+      "title": "Em outros casos",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Eu não entendi. Você pode tentar reformular a frase."
+              },
+              {
+                "text": "Você pode reformular sua afirmação? Eu não estou entendendo."
+              },
+              {
+                "text": "Eu não entendi o sentido."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "anything_else",
+      "dialog_node": "Em outros casos",
+      "previous_sibling": "node_5_1746539554482",
+      "disambiguation_opt_out": true
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_10_1746539296177",
+      "event_name": "focus",
+      "dialog_node": "handler_3_1746539296178",
+      "previous_sibling": "handler_6_1746539296178"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_5_1746538574744",
+      "context": {
+        "cadastro__Nome": "@cadastro:(Nome Completo)"
+      },
+      "conditions": "@cadastro:(Nome Completo)",
+      "event_name": "input",
+      "dialog_node": "handler_5_1746538574752"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_1_1746538942807",
+      "context": {
+        "cadastro_nomecompleto": "@cadastro:(Nome Completo)"
+      },
+      "conditions": "@cadastro:(Nome Completo)",
+      "event_name": "input",
+      "dialog_node": "handler_5_1746538942817"
+    },
+    {
+      "type": "event_handler",
+      "parent": "slot_10_1746539296177",
+      "event_name": "input",
+      "dialog_node": "handler_6_1746539296178"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Por favor, informe seu nome para cadastro?"
+              }
+            ],
+            "response_type": "text"
+          }
+        ]
+      },
+      "parent": "slot_1_1746538942807",
+      "event_name": "focus",
+      "dialog_node": "handler_7_1746538942817",
+      "previous_sibling": "handler_5_1746538942817"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Qual o seu nome?"
+              }
+            ],
+            "response_type": "text"
+          }
+        ]
+      },
+      "parent": "slot_5_1746538574744",
+      "event_name": "focus",
+      "dialog_node": "handler_9_1746538574752",
+      "previous_sibling": "handler_5_1746538574752"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Você tem cadastro?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "#cadastro",
+      "dialog_node": "node_10_1746538567884",
+      "previous_sibling": "Bem-vindo"
+    },
+    {
+      "type": "standard",
+      "title": "Sim",
+      "parent": "node_1_1746539586331",
+      "dialog_node": "node_10_1746539644596",
+      "previous_sibling": "node_5_1746539610677"
+    },
+    {
+      "type": "standard",
+      "title": "Confirmação de Agendamento",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Você confirma o agendamento para o dia $data $hora?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_5_1746539428655",
+      "context": {
+        "data": "@sys-date.literal",
+        "hora": "@sys-time.literal"
+      },
+      "conditions": "@sys-date && @sys-time",
+      "dialog_node": "node_1_1746539586331"
+    },
+    {
+      "type": "standard",
+      "title": "Sim",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Informe o seu nome?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_10_1746538567884",
+      "conditions": "@opcao:sim",
+      "dialog_node": "node_2_1746538870598"
+    },
+    {
+      "type": "standard",
+      "title": "Agendamento",
+      "output": {
+        "generic": [
+          {
+            "title": "Os horários disponíveis são:",
+            "options": [
+              {
+                "label": "20/06/2025 às 10h00",
+                "value": {
+                  "input": {
+                    "text": "20/06/2025 às 10h"
+                  }
+                }
+              }
+            ],
+            "response_type": "option"
+          }
+        ]
+      },
+      "next_step": {
+        "behavior": "skip_user_input"
+      },
+      "dialog_node": "node_5_1746539428655",
+      "previous_sibling": "node_10_1746538567884"
+    },
+    {
+      "type": "standard",
+      "title": "Finalização de Atendimento",
+      "digress_in": "does_not_return",
+      "dialog_node": "node_5_1746539554482",
+      "previous_sibling": "node_5_1746539428655"
+    },
+    {
+      "type": "standard",
+      "title": "Não",
+      "parent": "node_1_1746539586331",
+      "dialog_node": "node_5_1746539610677"
+    },
+    {
+      "type": "frame",
+      "title": "Não",
+      "parent": "node_10_1746538567884",
+      "conditions": "@opcao:não",
+      "dialog_node": "node_7_1746538872509",
+      "previous_sibling": "node_2_1746538870598"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Nome Completo: João da Silva Santos"
+              },
+              {
+                "text": "RG: 12.123.123-12"
+              },
+              {
+                "text": "Endereço: Blá blá bla"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "multiline"
+          }
+        ]
+      },
+      "parent": "node_2_1746538870598",
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "body",
+        "dialog_node": "node_5_1746539428655"
+      },
+      "conditions": "@pesssoas_cadastradas:João",
+      "dialog_node": "node_7_1746539093846"
+    },
+    {
+      "type": "slot",
+      "parent": "node_7_1746538872509",
+      "dialog_node": "slot_10_1746539296177",
+      "previous_sibling": "slot_1_1746538942807"
+    },
+    {
+      "type": "slot",
+      "parent": "node_7_1746538872509",
+      "variable": "$cadastro_nomecompleto",
+      "dialog_node": "slot_1_1746538942807"
+    },
+    {
+      "type": "slot",
+      "parent": "node_10_1746538567884",
+      "variable": "$cadastro__Nome",
+      "dialog_node": "slot_5_1746538574744",
+      "previous_sibling": "node_7_1746538872509"
+    }
+  ],
+  "counterexamples": [],
+  "system_settings": {
+    "disambiguation": {
+      "prompt": "Você quis dizer:",
+      "enabled": true,
+      "randomize": true,
+      "max_suggestions": 5,
+      "suggestion_text_policy": "title",
+      "none_of_the_above_prompt": "Nenhuma das anteriores",
+      "use_connect_to_support_prompt": "Connect to support",
+      "single_answer_clarification_prompt": "Something else"
+    },
+    "human_agent_assist": {
+      "prompt": "Você quis dizer:"
+    }
+  },
+  "learning_opt_out": false,
+  "language": "pt-br",
+  "description": "",
+  "name": "E-commerce-dialog"
+}

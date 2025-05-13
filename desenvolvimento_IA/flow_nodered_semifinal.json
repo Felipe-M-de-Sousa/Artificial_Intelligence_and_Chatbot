@@ -1,0 +1,299 @@
+[
+    {
+        "id": "0436aab67d1a5302",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "deef3d9cdc9fd48d",
+        "type": "telegram receiver",
+        "z": "0436aab67d1a5302",
+        "name": "",
+        "bot": "74677cd78732490e",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 90,
+        "y": 180,
+        "wires": [
+            [
+                "f2020ffae232a848"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "72e61a611dbfc7f9",
+        "type": "telegram sender",
+        "z": "0436aab67d1a5302",
+        "name": "",
+        "bot": "74677cd78732490e",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1330,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6284c992b24cc7ca",
+        "type": "watson-speech-to-text",
+        "z": "0436aab67d1a5302",
+        "name": "",
+        "alternatives": 1,
+        "speakerlabels": true,
+        "smartformatting": false,
+        "lang": "pt-BR",
+        "langhidden": "pt-BR",
+        "langcustom": "NoCustomisationSetting",
+        "langcustomhidden": "",
+        "custom-weight": "0.5",
+        "band": "BroadbandModel",
+        "bandhidden": "BroadbandModel",
+        "keywords": "",
+        "keywords-threshold": "0.5",
+        "word-confidence": false,
+        "password": "",
+        "apikey": "ZKChHc9OTDhfKTElYH0OHuiovb8Kv-8XoBGe7U1ve5t9",
+        "payload-response": true,
+        "streaming-mode": false,
+        "streaming-mute": true,
+        "auto-connect": false,
+        "discard-listening": false,
+        "disable-precheck": false,
+        "service-endpoint": "https://api.us-south.speech-to-text.watson.cloud.ibm.com/instances/9934f51f-a876-491a-a218-28375409b19f",
+        "x": 720,
+        "y": 100,
+        "wires": [
+            [
+                "e0ec825d353478ca"
+            ]
+        ]
+    },
+    {
+        "id": "c714572ab2d8bad4",
+        "type": "function",
+        "z": "0436aab67d1a5302",
+        "name": "Proc Entrada Audio",
+        "func": "msg.params = {\n    \"session_id\": 123\n\n};\nmsg.chatId = msg.payload.chatId;\nmsg.payload = msg.payload.weblink;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 100,
+        "wires": [
+            [
+                "6284c992b24cc7ca"
+            ]
+        ]
+    },
+    {
+        "id": "e0ec825d353478ca",
+        "type": "watson-assistant-v2",
+        "z": "0436aab67d1a5302",
+        "name": "",
+        "service-endpoint": "https://api.us-south.assistant.watson.cloud.ibm.com/instances/f42240cb-c02a-41fd-8d02-80335cc2dcbc",
+        "assistant_id": "0cbaa73a-bc14-4026-bc7b-a28ca6f9c105",
+        "debug": false,
+        "restart": false,
+        "return_context": true,
+        "alternate_intents": false,
+        "multisession": true,
+        "timeout": "",
+        "optout-learning": false,
+        "persist-session-id": false,
+        "x": 750,
+        "y": 200,
+        "wires": [
+            [
+                "e2981874be44c992",
+                "8ce38bf1bc0c88d5"
+            ]
+        ]
+    },
+    {
+        "id": "e2981874be44c992",
+        "type": "function",
+        "z": "0436aab67d1a5302",
+        "name": "Proc Saida Watson",
+        "func": "msg.payload = {\n    chatId: msg.chatId,\n    type: \"message\",\n    content: msg.payload.output.generic[0].text\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 100,
+        "wires": [
+            [
+                "72e61a611dbfc7f9"
+            ]
+        ]
+    },
+    {
+        "id": "6ca208ae1133dbe7",
+        "type": "function",
+        "z": "0436aab67d1a5302",
+        "name": "Proc Entrada Texto",
+        "func": "msg.params = {\n    \"session_id\": 123\n\n};\nmsg.chatId = msg.payload.chatId;\nmsg.payload = msg.payload.content;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 260,
+        "wires": [
+            [
+                "e0ec825d353478ca"
+            ]
+        ]
+    },
+    {
+        "id": "f2020ffae232a848",
+        "type": "switch",
+        "z": "0436aab67d1a5302",
+        "name": "",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "voice",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "message",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 310,
+        "y": 180,
+        "wires": [
+            [
+                "c714572ab2d8bad4"
+            ],
+            [
+                "6ca208ae1133dbe7"
+            ]
+        ]
+    },
+    {
+        "id": "56c6ead7e6f1fe1a",
+        "type": "watson-text-to-speech",
+        "z": "0436aab67d1a5302",
+        "name": "",
+        "lang": "pt-BR",
+        "langhidden": "pt-BR",
+        "langcustom": "NoCustomisationSetting",
+        "langcustomhidden": "",
+        "voice": "pt-BR_IsabelaV3Voice",
+        "voicehidden": "pt-BR_IsabelaV3Voice",
+        "format": "audio/wav",
+        "password": "",
+        "apikey": "WxXPhZeLitrPNxsMCZjbTP-w_mPVXQDfqEUdLA6qRwjx",
+        "payload-response": true,
+        "service-endpoint": "https://api.us-south.text-to-speech.watson.cloud.ibm.com/instances/4a505c96-772e-4cde-bc13-c6b7b8e2ac7d",
+        "x": 1220,
+        "y": 300,
+        "wires": [
+            [
+                "da219119ee3fdeec"
+            ]
+        ]
+    },
+    {
+        "id": "933706ecaed0be8d",
+        "type": "debug",
+        "z": "0436aab67d1a5302",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "da219119ee3fdeec",
+        "type": "function",
+        "z": "0436aab67d1a5302",
+        "name": "Proc Saida Texto para Audio",
+        "func": "msg.payload = {\n    chatId: msg.chatId,\n    type: \"voice\",\n    content: msg.payload\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1440,
+        "y": 320,
+        "wires": [
+            [
+                "72e61a611dbfc7f9"
+            ]
+        ]
+    },
+    {
+        "id": "8ce38bf1bc0c88d5",
+        "type": "function",
+        "z": "0436aab67d1a5302",
+        "name": "Proc Saida Watson",
+        "func": "msg.payload =  msg.payload.output.generic[0].text;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 260,
+        "wires": [
+            [
+                "56c6ead7e6f1fe1a",
+                "933706ecaed0be8d"
+            ]
+        ]
+    },
+    {
+        "id": "74677cd78732490e",
+        "type": "telegram bot",
+        "botname": "health_tech_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    }
+]
